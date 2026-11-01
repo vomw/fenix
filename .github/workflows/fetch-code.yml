@@ -1,0 +1,41 @@
+
+name: Fetch Fenix code
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-source:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Clone code
+        run: |
+          set -euo pipefail
+          cd /tmp
+          git clone --filter=blob:none --no-checkout https://github.com/mozilla-firefox/firefox.git
+          cd firefox
+          git sparse-checkout init --cone
+          git sparse-checkout set mobile/android/fenix
+          git checkout
+
+
+      - name: List files
+        shell: bash
+        run: |
+          set -euo pipefail
+          pwd
+          ls -alht /tmp/firefox
+
+
+
