@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mv firefox/mobile/android/fenix/* .
+          mv /tmp/firefox/mobile/android/fenix/* .
 
       - name: List files
         shell: bash
