@@ -1,5 +1,5 @@
 
-name: Fetch Fenix code
+name: Fetch Fenix source
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  update-source:
+  fetch-fenix-source:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,20 +22,16 @@ jobs:
       - name: Clone code
         run: |
           set -euo pipefail
-          cd /tmp
-          git clone --filter=blob:none --no-checkout https://github.com/mozilla-firefox/firefox.git
-          cd firefox
-          git sparse-checkout init --cone
-          git sparse-checkout set mobile/android/fenix
-          git checkout
-
+          git clone --depth 1 --filter=blob:none --sparse --no-checkout https://github.com/mozilla-firefox/firefox.git /tmp/gh-firefox
+          git -C /tmp/gh-firefox sparse-checkout set --no-cone mobile/android/fenix
+          git -C /tmp/gh-firefox checkout
 
       - name: List files
         shell: bash
         run: |
           set -euo pipefail
           pwd
-          ls -alht /tmp/firefox
+          ls -alhtR /tmp/gh-firefox
 
 
 
