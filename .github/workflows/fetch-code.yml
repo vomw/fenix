@@ -46,7 +46,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update source from F-Droid archive"
+            git commit -m "Fenix source $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             git push
           fi
 
