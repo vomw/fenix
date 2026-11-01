@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  fetch-fenix-source:
+  fetch-latest-fenix-source:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,21 +29,24 @@ jobs:
         run: |
           set -euo pipefail
           find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.github' -exec rm -rf -- {} +
-          ls -laht
 
       - name: Move files
         shell: bash
         run: |
           set -euo pipefail
           mv /tmp/firefox/mobile/android/fenix/* .
+          git add -A
 
-      - name: List files
-        shell: bash
+      - name: Commit and push changes
         run: |
           set -euo pipefail
-          pwd
-          ls -alhtR /tmp/firefox
-          git status
-
-
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update source from F-Droid archive"
+            git push
+          fi
 
